@@ -27,7 +27,10 @@ async function apiRequest(resource, method, payload){
     });
     if(!res.ok) throw new Error('HTTP '+res.status);
     if(res.status === 204) return null;
-    return await res.json();
+    var data = await res.json();
+    if(data && typeof data === 'object' && 'data' in data && Array.isArray(data.data)) return data.data;
+    if(data && typeof data === 'object' && 'data' in data && (data.data === null || typeof data.data === 'object')) return data.data;
+    return data;
   } catch(_) {
     var db = memoryGet(resource);
     if((method || 'GET') === 'GET') return db;
