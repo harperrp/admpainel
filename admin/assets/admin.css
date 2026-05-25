@@ -648,3 +648,120 @@ th { color: var(--text-soft); font-weight: 600; background: var(--bg-3); }
   color: var(--text-soft);
 }
  main
+/* ===== FIX LAYOUT SPA ===== */
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  display: block;
+}
+
+#app {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
+
+.sb {
+  width: 248px;
+  min-width: 248px;
+  max-width: 248px;
+  height: 100vh;
+  flex-shrink: 0;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  width: calc(100vw - 248px);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.topbar {
+  width: 100%;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.content {
+  flex: 1;
+  width: 100%;
+  max-width: none !important;
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 28px;
+}
+
+.page,
+.page.act {
+  width: 100%;
+  max-width: none !important;
+}
+
+.ph {
+  width: 100%;
+}
+
+.stat-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.g2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.g3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.gm {
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+}
+
+.tw,
+.card,
+.alert {
+  width: 100%;
+  max-width: none;
+}
+
+@media (max-width: 1100px) {
+  .stat-grid {
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+  }
+
+  .gm,
+  .g2,
+  .g3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .sb {
+    width: 70px;
+    min-width: 70px;
+    max-width: 70px;
+  }
+
+  .main {
+    width: calc(100vw - 70px);
+  }
+
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+}
