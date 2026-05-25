@@ -18,13 +18,17 @@ function memorySet(resource, value){
 function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 
 async function apiRequest(resource, method, payload){
-  var url = API_BASE + resource + (resource.includes('?') ? '&' : '') ;
-  if(!resource.endsWith('.php') && !resource.includes('.php?')){
-    url = API_BASE + resource + '.php';
+  var resourceParts = String(resource || '').split('?');
+  var resourcePath = resourceParts.shift() || '';
+  var resourceQuery = resourceParts.length ? ('?' + resourceParts.join('?')) : '';
+  var normalizedPath = resourcePath;
+  if(!normalizedPath.endsWith('.php')){
+    normalizedPath += '.php';
   }
+  var url = API_BASE + normalizedPath + resourceQuery;
   try {
     if((method === 'PUT' || method === 'DELETE') && payload && payload.id){
-      url += '?id=' + encodeURIComponent(payload.id);
+      url += (url.includes('?') ? '&' : '?') + 'id=' + encodeURIComponent(payload.id);
     }
     var res = await fetch(url, {
       method: method || 'GET',
