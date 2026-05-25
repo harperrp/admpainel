@@ -23,6 +23,7 @@ if ($method === 'GET') {
 }
 
 if ($method === 'POST') {
+    require_login();
     $d = get_json_input();
     $stmt = $pdo->prepare('INSERT INTO laws (title,law_number,law_type,summary,content,file_url,publication_date,status) VALUES (?,?,?,?,?,?,?,?)');
     $stmt->execute([
@@ -33,6 +34,7 @@ if ($method === 'POST') {
 }
 
 if ($method === 'PUT') {
+    require_login();
     if (!$id) json_response(['ok'=>false,'error'=>'ID obrigatório'],400);
     $d = get_json_input();
     $stmt = $pdo->prepare('UPDATE laws SET title=?,law_number=?,law_type=?,summary=?,content=?,file_url=?,publication_date=?,status=? WHERE id=?');
@@ -44,6 +46,7 @@ if ($method === 'PUT') {
 }
 
 if ($method === 'DELETE') {
+    require_login();
     if (!$id) json_response(['ok'=>false,'error'=>'ID obrigatório'],400);
     $stmt = $pdo->prepare('DELETE FROM laws WHERE id=?');
     $stmt->execute([$id]);
