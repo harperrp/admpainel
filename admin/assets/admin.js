@@ -29,6 +29,7 @@ async function apiRequest(resource, method, payload){
     var res = await fetch(url, {
       method: method || 'GET',
       headers: {'Content-Type':'application/json'},
+      credentials: 'same-origin',
       body: payload ? JSON.stringify(payload) : undefined
     });
     if(!res.ok) throw new Error('HTTP '+res.status);
@@ -261,7 +262,18 @@ document.querySelectorAll(".fs").forEach(function(sel){
 document.addEventListener("keydown", function(e){
   if((e.ctrlKey || e.metaKey) && e.key === "k"){
     e.preventDefault();
-    showToast("Busca global em desenvolvimento", "i");
+    var q = prompt("Busca rápida (título, texto ou conteúdo):", "");
+    if(q === null) return;
+    q = String(q || '').toLowerCase().trim();
+    if(!q){ showToast('Digite um termo para buscar', 'w'); return; }
+    var rows = Array.from(document.querySelectorAll('tbody tr, .ouv-item, .card, .item'));
+    var hit = 0;
+    rows.forEach(function(row){
+      var ok = row.textContent.toLowerCase().includes(q);
+      row.style.display = ok ? '' : 'none';
+      if(ok) hit++;
+    });
+    showToast(hit ? ('Busca aplicada: '+hit+' resultado(s)') : 'Nenhum resultado encontrado', hit ? 's' : 'w');
   }
   if(e.key === "Escape"){
     document.querySelectorAll(".mo.open").forEach(function(m){ m.classList.remove("open"); });
