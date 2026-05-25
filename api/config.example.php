@@ -8,6 +8,6 @@ return [
   'db_port' => '3306',
   'db_name' => 'camaravgp',
   'db_user' => 'usercamara',
-  'db_pass' => 'B4hb4hb4h@@',
+  'db_pass' => '<definir_no_servidor>',
   'session_name' => 'camaravp_admin',
 ];
