@@ -9,7 +9,18 @@ if($method==='GET'){
  $sql=$admin?'SELECT * FROM public_tenders ORDER BY opening_date DESC,id DESC':"SELECT * FROM public_tenders WHERE status IN ('publicado','aberto','andamento') ORDER BY opening_date DESC,id DESC";
  json_response(['ok'=>true,'data'=>$pdo->query($sql)->fetchAll()]);
 }
-if($method==='POST'){$d=get_json_input();$s=$pdo->prepare('INSERT INTO public_tenders (title,tender_number,modality,description,file_url,opening_date,status) VALUES (?,?,?,?,?,?,?)');$s->execute([$d['title']??'',$d['tender_number']??null,$d['modality']??null,$d['description']??null,$d['file_url']??null,$d['opening_date']??date('Y-m-d'),$d['status']??'publicado']);json_response(['ok'=>true,'id'=>(int)$pdo->lastInsertId()],201);} 
-if($method==='PUT'){if(!$id)json_response(['ok'=>false,'error'=>'ID obrigatório'],400);$d=get_json_input();$s=$pdo->prepare('UPDATE public_tenders SET title=?,tender_number=?,modality=?,description=?,file_url=?,opening_date=?,status=? WHERE id=?');$s->execute([$d['title']??'',$d['tender_number']??null,$d['modality']??null,$d['description']??null,$d['file_url']??null,$d['opening_date']??date('Y-m-d'),$d['status']??'publicado',$id]);json_response(['ok'=>true]);}
-if($method==='DELETE'){if(!$id)json_response(['ok'=>false,'error'=>'ID obrigatório'],400);$s=$pdo->prepare('DELETE FROM public_tenders WHERE id=?');$s->execute([$id]);json_response(['ok'=>true]);}
+if($method==='POST'){
+ require_login();
+ $d=get_json_input();$s=$pdo->prepare('INSERT INTO public_tenders (title,tender_number,modality,description,file_url,opening_date,status) VALUES (?,?,?,?,?,?,?)');$s->execute([$d['title']??'',$d['tender_number']??null,$d['modality']??null,$d['description']??null,$d['file_url']??null,$d['opening_date']??date('Y-m-d'),$d['status']??'publicado']);json_response(['ok'=>true,'id'=>(int)$pdo->lastInsertId()],201);} 
+if($method==='PUT'){
+ require_login();
+ if(!$id)json_response(['ok'=>false,'error'=>'ID obrigatório'],400);
+ $d=get_json_input();$s=$pdo->prepare('UPDATE public_tenders SET title=?,tender_number=?,modality=?,description=?,file_url=?,opening_date=?,status=? WHERE id=?');$s->execute([$d['title']??'',$d['tender_number']??null,$d['modality']??null,$d['description']??null,$d['file_url']??null,$d['opening_date']??date('Y-m-d'),$d['status']??'publicado',$id]);json_response(['ok'=>true]);}
+if($method==='DELETE'){
+ require_login();
+ if(!$id)json_response(['ok'=>false,'error'=>'ID obrigatório'],400);
+ $s=$pdo->prepare('DELETE FROM public_tenders WHERE id=?');
+ $s->execute([$id]);
+ json_response(['ok'=>true]);
+}
 json_response(['ok'=>false,'error'=>'Método inválido'],405);

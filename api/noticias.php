@@ -22,7 +22,9 @@ if ($method === 'GET') {
     json_response(['ok' => true, 'data' => $stmt->fetchAll()]);
 }
 
-if ($method === 'POST') {    $d = get_json_input();
+if ($method === 'POST') {
+    require_login();
+    $d = get_json_input();
     $stmt = $pdo->prepare('INSERT INTO news (title, slug, summary, content, image_url, category, status, published_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
     $stmt->execute([
         $d['title'] ?? '',
@@ -37,7 +39,9 @@ if ($method === 'POST') {    $d = get_json_input();
     json_response(['ok' => true, 'id' => (int)$pdo->lastInsertId()], 201);
 }
 
-if ($method === 'PUT') {    if (!$id) json_response(['ok' => false, 'error' => 'ID obrigatório'], 400);
+if ($method === 'PUT') {
+    require_login();
+    if (!$id) json_response(['ok' => false, 'error' => 'ID obrigatório'], 400);
     $d = get_json_input();
     $stmt = $pdo->prepare('UPDATE news SET title=?, slug=?, summary=?, content=?, image_url=?, category=?, status=?, published_at=? WHERE id=?');
     $stmt->execute([
@@ -54,7 +58,9 @@ if ($method === 'PUT') {    if (!$id) json_response(['ok' => false, 'error' => '
     json_response(['ok' => true]);
 }
 
-if ($method === 'DELETE') {    if (!$id) json_response(['ok' => false, 'error' => 'ID obrigatório'], 400);
+if ($method === 'DELETE') {
+    require_login();
+    if (!$id) json_response(['ok' => false, 'error' => 'ID obrigatório'], 400);
     $stmt = $pdo->prepare('DELETE FROM news WHERE id=?');
     $stmt->execute([$id]);
     json_response(['ok' => true]);
