@@ -2,5 +2,7 @@
 - Arquivo de estrutura: `database/schema.sql`.
 - Seed inicial: `database/seed.sql`.
 - Importação no Plesk/phpMyAdmin: selecionar banco `camaravp` > Importar > enviar `schema.sql` e depois `seed.sql`.
-- Configuração segura: copiar `admin/api/config.example.php` para `admin/api/config.local.php` no servidor e definir `DB_PASS` em variável de ambiente.
+- Configuração segura: definir `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS` e `SESSION_NAME` no ambiente do servidor (Apache/Nginx/Plesk).
 - Nunca versionar senha real.
+
+- A API em `api/config.php` agora aceita as variáveis de ambiente `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS` e `SESSION_NAME` com fallback local.
