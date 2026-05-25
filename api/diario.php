@@ -21,9 +21,7 @@ if($method==='GET'){
  json_response(['ok'=>true,'data'=>$s->fetchAll()]);
 }
 
-if($method==='POST'){
- require_login();
- $d=get_json_input();
+if($method==='POST'){ $d=get_json_input();
  $s=$pdo->prepare('INSERT INTO official_diary (title,edition_number,description,file_url,publication_date,status) VALUES(?,?,?,?,?,?)');
  $s->execute([
   $d['title']??'',
