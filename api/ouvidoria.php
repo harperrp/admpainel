@@ -4,6 +4,10 @@ require __DIR__.'/common.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
+if ($_SERVER['REQUEST_METHOD'] !== 'GET' || (isset($_GET['admin']) && $_GET['admin'] == '1')) {
+    require_login();
+}
+
 
 if ($method === 'GET') {
     $stmt = $pdo->query('SELECT * FROM ombudsman_requests ORDER BY created_at DESC, id DESC');

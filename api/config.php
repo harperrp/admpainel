@@ -13,6 +13,6 @@ return [
   'db_port' => env_value('DB_PORT', '3306'),
   'db_name' => env_value('DB_NAME', 'camaravgp'),
   'db_user' => env_value('DB_USER', 'usercamara'),
-  'db_pass' => env_value('DB_PASS', 'B4hb4hb4h@@'),
+  'db_pass' => env_value('DB_PASS', ''),
   'session_name' => env_value('SESSION_NAME', 'camaravp_admin'),
 ];
