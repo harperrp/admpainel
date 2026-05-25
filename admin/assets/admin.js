@@ -1,6 +1,5 @@
 const API_BASE = '../api/';
 
- codex/transform-admin-panel-to-spa-0uz1ax
 function loadNoticias() {}
 function saveNoticia() {}
 function deleteNoticia() {}
@@ -15,7 +14,38 @@ function saveLegislacao() {}
 function deleteLegislacao() {}
 
 var PAGE_MAP={'dashboard':'index.html','vereadores':'vereadores.html','noticias':'noticias.html','diario':'diario.html','legislacao':'legislacao.html','concursos':'concursos.html','esic':'esic.html','ouvidoria':'ouvidoria.html','config':'config.html','usuarios':'usuarios.html'};
-function go(id,el){if(PAGE_MAP[id])window.location.href=PAGE_MAP[id];}
+
+async function go(id,el,pushState){
+  var page = PAGE_MAP[id];
+  if(!page) return;
+
+  try {
+    var res = await fetch(page, { cache: 'no-store' });
+    if(!res.ok) throw new Error('Falha ao carregar ' + page);
+    var html = await res.text();
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    var nextMain = doc.querySelector('.main');
+    var curMain = document.querySelector('.main');
+    if(!nextMain || !curMain) throw new Error('Estrutura .main não encontrada');
+
+    curMain.innerHTML = nextMain.innerHTML;
+
+    document.querySelectorAll('.ni').forEach(function(n){ n.classList.remove('act'); });
+    var active = document.querySelector('.ni[onclick*="go(\\\'' + id + '\\\'"]');
+    if(active) active.classList.add('act');
+
+    if(pushState !== false){
+      history.pushState({page:id}, '', page);
+    }
+
+    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+
+    if(typeof animBars === 'function') setTimeout(animBars, 120);
+  } catch(err){
+    console.error(err);
+    window.location.href = page;
+  }
+}
 function filtVer(val){val=val.toLowerCase();document.querySelectorAll("#tbl-ver tbody tr").forEach(function(r){r.style.display=r.textContent.toLowerCase().includes(val)?"":"none";});}
 
 // ── MULTI-PAGE NAVIGATION ──
@@ -1457,4 +1487,10 @@ function saveLegislacao() {}
 function deleteLegislacao() {}
 
 renderView('dashboard');
- main
+
+
+window.addEventListener("popstate", function(){
+  var file = location.pathname.split("/").pop() || "index.html";
+  var id = Object.keys(PAGE_MAP).find(function(k){ return PAGE_MAP[k] === file; }) || "dashboard";
+  go(id, null, true);
+});
