@@ -21,7 +21,9 @@ if ($method === 'GET') {
     json_response(['ok' => true, 'data' => $stmt->fetchAll()]);
 }
 
-if ($method === 'POST') {    $d = get_json_input();
+if ($method === 'POST') {
+    require_login();
+    $d = get_json_input();
     $stmt = $pdo->prepare('INSERT INTO councilors (name, party, role, legislature, phone, email, photo_url, biography, display_order, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
     $stmt->execute([
         $d['name'] ?? '',
@@ -38,7 +40,9 @@ if ($method === 'POST') {    $d = get_json_input();
     json_response(['ok' => true, 'id' => (int)$pdo->lastInsertId()], 201);
 }
 
-if ($method === 'PUT') {    if (!$id) json_response(['ok' => false, 'error' => 'ID obrigatório'], 400);
+if ($method === 'PUT') {
+    require_login();
+    if (!$id) json_response(['ok' => false, 'error' => 'ID obrigatório'], 400);
     $d = get_json_input();
     $stmt = $pdo->prepare('UPDATE councilors SET name=?, party=?, role=?, legislature=?, phone=?, email=?, photo_url=?, biography=?, display_order=?, active=? WHERE id=?');
     $stmt->execute([
@@ -57,7 +61,9 @@ if ($method === 'PUT') {    if (!$id) json_response(['ok' => false, 'error' => '
     json_response(['ok' => true]);
 }
 
-if ($method === 'DELETE') {    if (!$id) json_response(['ok' => false, 'error' => 'ID obrigatório'], 400);
+if ($method === 'DELETE') {
+    require_login();
+    if (!$id) json_response(['ok' => false, 'error' => 'ID obrigatório'], 400);
     $stmt = $pdo->prepare('DELETE FROM councilors WHERE id=?');
     $stmt->execute([$id]);
     json_response(['ok' => true]);
